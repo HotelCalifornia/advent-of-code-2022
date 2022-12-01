@@ -31,8 +31,15 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    std::sort(rations.begin(), rations.end(), std::greater<int>());
+
     std::cout << "The elf with the fattest pack is carrying "
-              << *std::max_element(rations.begin(), rations.end())
+              << *rations.begin()
               << " calories"
+              << std::endl;
+
+    std::cout << "The top three elves together are carrying "
+              << std::accumulate(rations.begin(), rations.begin() + 3, 0)
+              << " calories, total"
               << std::endl;
 }
