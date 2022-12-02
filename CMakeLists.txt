@@ -5,3 +5,5 @@ project(AdventOfCode2022 CXX)
 add_executable(day01 src/day01/main.cpp)
 target_compile_features(day01 PUBLIC cxx_std_20)
 
+add_executable(day02 src/day02/main.cpp)
+target_compile_features(day02 PUBLIC cxx_std_20)
