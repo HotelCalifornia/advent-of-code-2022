@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+#include "common/debug.hpp"
+
 class Item {
     std::string::value_type i;
     Item(const std::string::value_type& c) : i(c) {};
@@ -74,19 +76,19 @@ public:
             const Rucksack& member_3
     ) const -> std::optional<Item> {
         
-        std::cout << "Debug:\tget_shared_item" << std::endl;
+        hotel::debug::out << "\tget_shared_item" << std::endl;
         std::vector<Item> m1_items, m2_items, m3_items;
         std::copy(items.begin(), items.end(), std::back_inserter(m1_items));
         std::copy(member_2.items.begin(), member_2.items.end(), std::back_inserter(m2_items));
         std::copy(member_3.items.begin(), member_3.items.end(), std::back_inserter(m3_items));
 
-        std::cout << "Debug:\t\tcopied items" << std::endl;
+        hotel::debug::out << "\t\tcopied items" << std::endl;
         
         std::sort(m1_items.begin(), m1_items.end());
         std::sort(m2_items.begin(), m2_items.end());
         std::sort(m3_items.begin(), m3_items.end());
 
-        std::cout << "Debug:\t\tsorted items" << std::endl;
+        hotel::debug::out << "Debug:\t\tsorted items" << std::endl;
 
         std::vector<Item> m1x2;
         std::set_intersection(
@@ -95,7 +97,7 @@ public:
             std::back_inserter(m1x2)
         );
 
-        std::cout << "Debug:\t\tcomputed m1 ^ m2" << std::endl;
+        hotel::debug::out << "\t\tcomputed m1 ^ m2" << std::endl;
 
         std::vector<Item> m1x3;
         std::set_intersection(
@@ -104,7 +106,7 @@ public:
             std::back_inserter(m1x3)
         );
 
-        std::cout << "Debug:\t\tcomputed m1 ^ m3" << std::endl;
+        hotel::debug::out << "\t\tcomputed m1 ^ m3" << std::endl;
 
         std::vector<Item> intersection;
         std::set_intersection(
@@ -113,10 +115,12 @@ public:
             std::back_inserter(intersection)
         );
 
-        std::cout << "Debug:\t\tcomputed (m1 ^ m2) ^ (m1 ^ m3)" << std::endl;
+        hotel::debug::out << "\t\tcomputed (m1 ^ m2) ^ (m1 ^ m3)" << std::endl;
 
         if (not intersection.empty()) {
-            std::cout << "Debug:\t\tfound shared item " << intersection.front().get_priority() << std::endl;
+            hotel::debug::out << "\t\tfound shared item "
+                              << intersection.front().get_priority()
+                              << std::endl;
             return intersection.front();
         }
 
@@ -137,9 +141,9 @@ struct line {
     operator std::string() const { return data; };
 };
 
-std::istream& operator>>(std::istream& str, line& data) {
-    std::getline(str, data.data);
-    return str;
+std::istream& operator>>(std::istream& stream, line& data) {
+    std::getline(stream, data.data);
+    return stream;
 }
 
 int main(int argc, char* argv[]) {
@@ -175,9 +179,13 @@ int main(int argc, char* argv[]) {
 
     total_priorities = 0;
     for (auto it = rucksacks.begin(); it + 2 < rucksacks.end(); it += 3) {
-        std::cout << "Debug: considering group at " << std::distance(rucksacks.begin(), it) << std::endl;
+        hotel::debug::out << "Debug: considering group at "
+                          << std::distance(rucksacks.begin(), it)
+                          << std::endl;
         if (auto badge = it->get_shared_item(*(it + 1), *(it + 2)); badge) {
-            std::cout << "Debug:\tfound badge " << badge->get_priority() << std::endl;
+            hotel::debug::out << "Debug:\tfound badge "
+                              << badge->get_priority()
+                              << std::endl;
             total_priorities += badge->get_priority();
         }
     }
