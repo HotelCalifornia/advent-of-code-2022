@@ -91,6 +91,7 @@ int main(int argc, char* argv[]) {
     std::ifstream input(argv[1]);
     if (not input) {
         std::cerr << "Error: could not open file " << argv[1] << std::endl;
+        return -1;
     }
 
     int score = 0;
@@ -98,8 +99,14 @@ int main(int argc, char* argv[]) {
         auto delim = round.find(' ');
         try {
             Move they = move::make_move(round.substr(0, delim).at(0));
-            Move we = get_move(they, outcome::make_outcome(round.substr(delim + 1).at(0)));
-            score += static_cast<int>(we) + static_cast<int>(results.find(std::make_pair(they, we))->second);
+            Move we = get_move(
+                    they,
+                    outcome::make_outcome(round.substr(delim + 1).at(0))
+            );
+            score += static_cast<int>(we) +
+                     static_cast<int>(results.find(
+                                 std::make_pair(they, we))->second
+                     );
         } catch(std::exception& e) {
             std::cerr << e.what() << std::endl;
             return -1;
